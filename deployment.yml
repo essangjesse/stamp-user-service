@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: stamp-service
+  labels:
+    run: stamp-user-service
+spec:
+  type: LoadBalancer
+  ports:
+  - name: stamp-service-port
+    port: 80
+    targetPort: 80
+  selector:
+    run: stamp-user-service
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stamp-user-service
+spec:
+  selector:
+    matchLabels:
+      run: stamp-user-service
+  template:
+    metadata:
+      labels:
+        run: stamp-user-service
+    spec:
+      containers:
+        - name: stamp-user-service
+          image: essangthegreat/stamp-user-service:1.0
+          ports:
+            - containerPort: 80
+          env:
+            - name: APP_KEY
+              value: base64:34xWqM9LGJoe3bX60c2IqwsWkQ6ETFdHWhtheGMekJ8=
+            - name: APP_ENV
+              value: production
+            - name: APP_DEBUG
+              value: "false"
+            - name: APP_TIMEZONE
+              value: UTC
+            - name: APP_DOCKER_INTERNAL
+              value: http://localhost
+            - name: APP_URL
+              value: http://localhost
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_HOST
+              value: "127.0.0.1"
+            - name: DB_DATABASE
+              value: prod_db
+            - name: DB_USERNAME
+              value: admin
+            - name: DB_PASSWORD
+              value: password
+        - name: stamp-user-db
+          image: mysql:5.7
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: rootpassword
+            - name: MYSQL_DATABASE
+              value: prod_db
+            - name: MYSQL_USER
+              value: admin
+            - name: MYSQL_PASSWORD
+              value: password
