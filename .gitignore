@@ -10,3 +10,4 @@
 /src/npm-debug.log
 /src/yarn-error.log
 /src/.phpunit.result.cache
+/helm/secrets.yml

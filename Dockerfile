@@ -8,8 +8,14 @@
 FROM ubuntu:18.04
 
 # Install common tools
-RUN apt-get update
-RUN apt-get install -y wget curl nano htop git unzip bzip2 software-properties-common locales
+RUN apt-get update \
+    && apt-get install -y wget curl vim nano inetutils-ping htop git unzip bzip2 software-properties-common locales
+
+# Install SSH
+RUN apt-get update \
+    && apt-get install -y openssh-server \
+    && mkdir -p /var/run/sshd
+
 
 # Set evn var to enable xterm terminal
 ENV TERM=xterm
@@ -28,8 +34,7 @@ WORKDIR /var/www/html
 
 # Install PHP
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
-RUN apt update
-RUN apt-get install -y \
+RUN apt update && apt-get install -y \
     php7.4-fpm \
     php7.4-common \
     php7.4-curl \
@@ -54,9 +59,7 @@ RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys ABF5BD827BD9BF62
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 4F4EA0AAE5267A6C
 RUN echo "deb http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/sources.list
 RUN echo "deb-src http://nginx.org/packages/ubuntu/ trusty nginx" >> /etc/apt/sources.list
-RUN apt-get update
-
-RUN apt-get install -y nginx
+RUN apt-get update && apt-get install -y nginx
 
 ADD resources/default /etc/nginx/sites-enabled/
 ADD resources/nginx.conf /etc/nginx/
@@ -75,8 +78,27 @@ ADD resources/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 #------------- Container Config ---------------------------------------------------------------
 
-# Expose port 80
-EXPOSE 80
+# Expose port 22 & 80
+EXPOSE 22 80
 
 # Set supervisor to manage container processes
 ENTRYPOINT ["/usr/bin/supervisord"]
+
+#------------- Container Config - Extras for non local environment -------------------------
+
+# Bundle web service source
+COPY ./src /var/www/html
+
+# Install app dependencies
+RUN cd /var/www/html && composer install --no-interaction
+
+#------------- Container Config - Aliasing the nginx logs to stdout and stderr--------------
+
+RUN ln -sf /dev/stdout /var/log/nginx/access.log \
+    && ln -sf /dev/stderr /var/log/nginx/error.log
+
+#------------- Container Config - Ownership & Log and cache folders writable --------------
+
+RUN chown -R www-data:www-data /var/www/html/
+RUN chmod -R 755 /var/www/html/storage
+RUN chmod -R 755 /var/www/html/bootstrap/cache || echo ""
