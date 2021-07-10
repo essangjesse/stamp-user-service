@@ -1,0 +1,19 @@
+php:
+  repository: "essangthegreat/stamp-user-service"
+  tag: "1.0"
+  fpmEnabled: false
+  envVars:
+    - name: APP_ENV
+      value: production
+    - name: APP_DEBUG
+      value: false
+    - name: APP_TIMEZONE
+      value: "UTC"
+    - name: APP_DOCKER_INTERNAL
+      value: http://localhost
+    - name: APP_URL
+      value: http://localhost
+    - name: DB_PORT
+      value: 3306
+    - name: DB_HOST
+      value: localhost

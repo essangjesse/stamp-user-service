@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('USERSWS_APP_NAME', 'Lumen'),
+    'name' => env('APP_NAME', 'Lumen'),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => env('USERSWS_APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'production'),
 
     /*
     |--------------------------------------------------------------------------
@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('USERSWS_APP_DEBUG', false),
+    'debug' => (bool) env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,9 +52,9 @@ return [
     |
     */
 
-    'url' => env('USERSWS_APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost'),
 
-    'docker_internal' => env('USERSWS_APP_DOCKER_INTERNAL'),
+    'docker_internal' => env('APP_DOCKER_INTERNAL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => env('USERSWS_APP_TIMEZONE', 'UTC'),
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
 
     /*
     |--------------------------------------------------------------------------
@@ -106,7 +106,7 @@ return [
     |
     */
 
-    'key' => env('USERSWS_APP_KEY'),
+    'key' => env('APP_KEY'),
 
     'cipher' => 'AES-256-CBC',
 

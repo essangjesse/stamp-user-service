@@ -15,26 +15,10 @@ use Illuminate\Http\Request;
 |
 */
 
-$router->get('/', function() {
-    if(config('app.env') != "production"){
-      return response()->json([
-        'status' => true,
-        'data' => [
-          'key' => Illuminate\Support\Str::random(32),
-        ],
-        'message' => 'Welcome to CashEnvoy!'
-      ], 200);
-    }
-
-    return response()->json([
-      'status' => true,
-      'message' => 'Welcome to CashEnvoy!'
-    ], 200);
-});
-
 $router->get('/health', function() {
     return response()->json([
       'status' => true,
+      'message' => 'Welcome to Stamp!'
     ], 200);
 });
 
@@ -48,10 +32,10 @@ $router->group([
     $router->group([
       'prefix' => 'user',
     ], function() use ($router) {
-      $router->get('/get[/{limit}]', 'Apis\v1\UsersController@fetch');
-      $router->put('/{id}/update', 'Apis\v1\UsersController@update');
-      $router->post('/create', 'Apis\v1\UsersController@store');
-      $router->delete('/{id}/delete', 'Apis\v1\UsersController@destroy');
+      $router->get('/', 'Apis\v1\UsersController@fetch');
+      $router->put('/{id}', 'Apis\v1\UsersController@update');
+      $router->post('/', 'Apis\v1\UsersController@store');
+      $router->delete('/{id}', 'Apis\v1\UsersController@destroy');
       $router->post('/authenticate', 'Apis\v1\AccessTokensController@authenticate');
 
       $router->group([
@@ -67,17 +51,16 @@ $router->group([
       });
 
       $router->group([
+        'prefix' => 'location'
+      ], function() use ($router) {
+        $router->put('/{id}', 'Apis\v1\LocationController@updateLocation');
+      });
+
+      $router->group([
         'prefix' => 'password'
       ], function() use ($router) {
         $router->post('/email', 'Apis\v1\PasswordController@sendPasswordResetEmail');
         $router->post('/reset', 'Apis\v1\PasswordController@resetPassword');
-      });
-
-      $router->group([
-        'prefix' => 'email'
-      ], function() use ($router) {
-        $router->post('/resend', 'Apis\v1\VerifyEmailController@resendVerificationCode');
-        $router->post('/verify', 'Apis\v1\VerifyEmailController@verifyEmail');
       });
     });
   });
