@@ -9,8 +9,8 @@ services:
       - 80:80
     environment:
       - APP_KEY=base64:34xWqM9LGJoe3bX60c2IqwsWkQ6ETFdHWhtheGMekJ8=
-      - APP_ENV=http://localhost:8001
-      - APP_DOCKER_INTERNAL=http://host.docker.internal:8001
+      - APP_ENV=http://localhost
+      - APP_DOCKER_INTERNAL=http://host.docker.internal
       - APP_DEBUG=true
       - APP_TIMEZONE=UTC
       - DB_PORT=3306
@@ -20,8 +20,6 @@ services:
       - DB_PASSWORD
       - CACHE_DRIVER=file
       - QUEUE_CONNECTION=sync
-    # volumes:
-    #   - ./src:/var/www/html
     depends_on:
       - mysql
 
